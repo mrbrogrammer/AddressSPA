@@ -1,20 +1,10 @@
 package com.practical.address;
 
-import com.practical.province.Province;
 import jakarta.persistence.*;
-
-import java.time.LocalDate;
-
 
 @Entity(name = "Address")
 @Table(
-        name = "address",
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "address_email_unique",
-                        columnNames = "email"
-                )
-        }
+        name = "address"
 )
 public class Address {
     @Id

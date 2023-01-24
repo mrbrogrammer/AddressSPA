@@ -1,5 +1,6 @@
 package com.practical.country;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -12,6 +13,6 @@ public class CountryService {
     }
 
     public List<Country> getCountry() {
-        return countryRepository.findAll();
+        return countryRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
     }
 }

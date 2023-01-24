@@ -17,6 +17,7 @@ public class Province {
             updatable = false
     )
     private String ProvinceCode;
+    
     @Column(
             name = "countryCode",
             nullable = false,
