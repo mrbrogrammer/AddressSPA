@@ -20,8 +20,7 @@ public class AddressService {
     }
 
     public void addNewAddress(Address address) {
-        Optional<Address> addressOptional =
-                addressRepository.findAddressByCountry(address.getCountry());
+        Optional<Address> addressOptional = addressRepository.findAddressByCountry(address.getCountry());
 
         if (addressOptional.isPresent()) {
             throw new IllegalStateException("Country taken");

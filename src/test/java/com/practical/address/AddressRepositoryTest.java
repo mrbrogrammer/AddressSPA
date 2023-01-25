@@ -22,10 +22,9 @@ public class AddressRepositoryTest {
     }
 
     @Test
-    void checkIfAddressByCountryExists() {
-        // given
+    void CheckIfAddressByCountryExists() {
+        // Arrange
         Address address = new Address(
-                1L,
                 718444197L,
                 631502175L,
                 "Marshall Town",
@@ -36,19 +35,19 @@ public class AddressRepositoryTest {
         );
 
         underTest.save(address);
-        // when
+        // Act
         boolean exists = underTest.findAddressByCountry("South Africa").isPresent();
-        // then
+        // Assert
         Assertions.assertTrue(exists);
     }
 
     @Test
-    void checkIfAddressByCountryDoesNotExist() {
-        // given
+    void CheckIfAddressByCountryDoesNotExist() {
+        // Arrange
         String country = "Australia";
-        // when
+        // Act
         boolean exists = underTest.findAddressByCountry(country).isPresent();
-        // then
+        // Assert
         Assertions.assertFalse(exists);
     }
 }

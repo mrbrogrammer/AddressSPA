@@ -14,43 +14,35 @@ public class ProvinceConfig {
         return args -> {
 
             Province L = new Province(
-                    "ZA",
-                    "L",
+                    new ProvinceId("ZA","L"),
                     "Limpopo"
             );
             Province EC = new Province(
-                    "ZA",
-                    "EC",
+                    new ProvinceId("ZA","EC"),
                     "Eastern Cape"
             );
             Province NC = new Province(
-                    "ZA",
-                    "NC",
+                    new ProvinceId("ZA","NC"),
                     "Northern Cape"
             );
             Province WC = new Province(
-                    "ZA",
-                    "WC",
+                    new ProvinceId("ZA","WC"),
                     "Western Cape"
             );
             Province KZN = new Province(
-                    "ZA",
-                    "KZN",
+                    new ProvinceId("ZA","KZN"),
                     "Kwazulu-Natal"
             );
             Province NW = new Province(
-                    "ZA",
-                    "NW",
+                    new ProvinceId("ZA","NW"),
                     "North West"
             );
             Province FS = new Province(
-                    "ZA",
-                    "FS",
+                    new ProvinceId("ZA","FS"),
                     "Free State"
             );
             Province GP = new Province(
-                    "ZA",
-                    "L",
+                    new ProvinceId("ZA","GP"),
                     "Gauteng"
             );
 
