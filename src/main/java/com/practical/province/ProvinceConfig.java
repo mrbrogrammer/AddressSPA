@@ -10,7 +10,6 @@ import java.util.List;
 public class ProvinceConfig {
     @Bean
     CommandLineRunner ProvinceCommandLineRunner(ProvinceRepository provinceRepository) {
-
         return args -> {
 
             Province L = new Province(
@@ -45,7 +44,6 @@ public class ProvinceConfig {
                     new ProvinceId("ZA","GP"),
                     "Gauteng"
             );
-
 
             provinceRepository.saveAll(
                     List.of(

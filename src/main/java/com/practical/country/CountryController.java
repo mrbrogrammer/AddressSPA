@@ -10,7 +10,6 @@ import java.util.List;
 @RequestMapping("/api/v1/countries")
 public class CountryController {
     private final CountryService countryService;
-
     @Autowired
     public CountryController(CountryService countryService) {
         this.countryService = countryService;
