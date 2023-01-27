@@ -1,7 +1,6 @@
 // import React, {useEffect, useState} from "react";
 //
 // import "./DropDown.css";
-// import val from"./App.js";
 //
 // const Icon = () => {
 //     return (
@@ -11,7 +10,7 @@
 //     );
 // };
 //
-// const Dropdown = ({ placeHolder, options, setVal }) => {
+// const Dropdown = ({ placeHolder, options }) => {
 //     const [showMenu, setShowMenu] = useState(false);
 //     const [selectedValue, setSelectedValue] = useState(null);
 //
@@ -48,11 +47,7 @@
 //     return (
 //         <div className="dropdown-container">
 //             <div onClick={handleInputClick} className="dropdown-input">
-//                 <input
-//                     value={getDisplay()}
-//                     className="dropdown-selected-value"
-//                     onChange={(e) => setVal(e.target.value)}>
-//                 </input>
+//                 <div className="dropdown-selected-value">{getDisplay()}</div>
 //                 { showMenu && (
 //                     <div className="dropdown-menu">
 //                         {options.map ((option) => (

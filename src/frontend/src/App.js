@@ -4,13 +4,18 @@ import './App.css';
 import "./App.css";
 import React, {useEffect, useState} from "react";
 // import { Dropdown } from 'reactstrap';
-import Dropdown from "./DropDown.css";
+import "./DropDown.css";
 // import * as url from "url";
 
 function App() {
 
-
-
+    const Icon = () => {
+        return (
+            <svg height="20" width="20" viewBox="0 0 20 20">
+                <path d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"></path>
+            </svg>
+        );
+    };
     const [countries, setCountries] = useState([]);
     const [provinces, setProvinces] = useState([]);
 
@@ -38,6 +43,7 @@ function App() {
 
     // console.log(countries)
 
+    const [addressId, setAddressId] = useState(0);
     const [line1, setLine1] = useState("");
     const [line2, setLine2] = useState("");
     const [suburb, setSuburb] = useState("");
@@ -45,6 +51,7 @@ function App() {
     const [province, setProvince] = useState("");
     const [postalCode, setPostalCode] = useState("");
     const [country, setCountry] = useState("");
+    const [message, setMessage] = useState("");
 
 
     let handleSubmit = async (e) => {
@@ -53,6 +60,7 @@ function App() {
             let res = await fetch("/api/v1/addresses", {
                 method: "POST",
                 body: JSON.stringify({
+                    addressId: addressId,
                     line1: line1,
                     line2: line2,
                     suburb: suburb,
@@ -67,6 +75,7 @@ function App() {
             });
             let resJson = await res.json();
             if (res.status === 200) {
+                setAddressId(Math.floor(Math.random() * 9))
                 setLine1("");
                 setLine2("");
                 setSuburb("");
@@ -75,53 +84,79 @@ function App() {
                 setPostalCode("");
                 setCountry("")
 
-                // setMessage("User created successfully");
+                setMessage("User created successfully");
             } else {
-                // setMessage("Some error occured");
+                setMessage("Invalid!");
             }
         } catch (err) {
             console.log(err);
         }
     };
 
-    const [showMenu, setShowMenu] = useState(false);
-    const [selectedValue, setSelectedValue] = useState(null);
+    const [countryMenu, setCountryMenu] = useState(false);
+    const [provinceMenu, setProvinceMenu] = useState(false);
+    const [selectedCountryValue, setSelectedCountryValue] = useState(null);
+    const [selectedProvinceValue, setSelectedProvinceValue] = useState(null);
 
     useEffect(() => {
-        const handler = () => setShowMenu(false);
-        window.addEventListener("click", handler);
+        const provinceHandler = () => setProvinceMenu(false);
+        const countryHandler = () => setCountryMenu(false);
+        window.addEventListener("click",  provinceHandler);
+        window.addEventListener("click",  countryHandler);
         console.log("clicked");
         return () => {
-            window.removeEventListener("click", handler);
+            window.removeEventListener("click", provinceHandler);
+            window.removeEventListener("click", countryHandler);
         };
     });
 
-    const handleInputClick = (e) => {
+    const handleProvinceInputClick = (e) => {
         e.stopPropagation();
-        setShowMenu(!showMenu);
+        setProvinceMenu(!provinceMenu);
     }
-    const getDisplay = () => {
-        if (selectedValue) {
-            return selectedValue.name;
+    const handleCountryInputClick = (e) => {
+        e.stopPropagation();
+        setCountryMenu(!countryMenu);
+    }
+    const getProvinceDisplay = () => {
+        if (selectedProvinceValue) {
+            return selectedProvinceValue.name;
         }
-        return placeHolder;
+        return "Province"
+    };
+    const getCountryDisplay = () => {
+        const ps = selectedCountryValue;
+        if (ps) {
+            return ps.name;
+        }
+
+        return "Country"
     };
 
-    const onItemClick = (option) => {
-        setSelectedValue(option);
+    const onItemCountryClick = (option) => {
+        setSelectedCountryValue(option);
     };
-    const isSelected = (option) => {
-        if (!selectedValue) {
-            return false;
-            return selectedValue.name
-        }
-    }
+    const onItemProvinceClick = (option) => {;
+        setSelectedProvinceValue(option);
+    };
 
+    const handleCountryChange = event => {
+        setCountry(event.target.innerText);
 
+        console.log('value is:', event.target.innerText);
+    };
+    const handleProvinceChange = event => {
+        setProvince(event.target.innerText);
+
+        console.log('value is:', event.target.innerText);
+    };
+
+    let e;
     return (
         <div className="App">
             <form onSubmit={handleSubmit}>
                 <input
+                    required
                     type="text"
                     value={line1}
                     placeholder="Line 1"
@@ -140,123 +175,94 @@ function App() {
                     onChange={(e) => setSuburb(e.target.value)}
                 />
                 <div className="dropdown-container">
-                    <div onClick={handleInputClick} className="dropdown-input">
-                        <input
-                            placeholder="Country"
-                            value={getDisplay()}
+                    <div onClick={handleCountryInputClick} className="dropdown-input">
+                        <div
                             className="dropdown-selected-value"
-                            onChange={(e) => setCountry(e.target.value)}>
-                        </input>
-                        { showMenu && (
+                            onChange={handleCountryChange}
+                            onEmptiedCapture={handleCountryChange}
+                            onLoadedData={handleCountryChange}
+                            >
+                            {getCountryDisplay()}
+                        </div>
+                        { countryMenu && (
                             <div className="dropdown-menu">
                                 {countries.map ((option) => (
                                     <div
-                                        onClick={() => onItemClick (option)}
-                                        key={option.countryCode ? option.countryCode : option.provinceId}
+                                        onClickCapture={handleCountryChange}
+                                        onClick={() =>
+                                            onItemCountryClick(option)
+                                        }
+                                        key={option.countryCode}
                                         className={'dropdown-item ${isSelected (option) && "selected"}'}>
                                         {option.name}
                                     </div>
                                 ))}
                             </div>
                         )}
-                        {/*<div className="dropdown-tools">*/}
-                        {/*    <div className="dropdown-tool">*/}
-                        {/*        <Icon />*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
+                        <div className="dropdown-tools">
+                            <div className="dropdown-tool">
+                                <Icon />
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                {/*<Dropdown*/}
-                {/*    placeHolder="Province"*/}
-                {/*    options={provinces}*/}
-                {/*    setVal={setProvince}*/}
-                {/*/>*/}
+                <div className="dropdown-container">
+                    <div onClick={handleProvinceInputClick} className="dropdown-input">
+                        <div
+                            className="dropdown-selected-value"
+                            onChange={handleProvinceChange}
+                            onEmptiedCapture={handleProvinceChange}
+                            onLoadedData={handleProvinceChange}
+                        >
+                            {getProvinceDisplay()}
+                        </div>
+
+                        { provinceMenu && (
+                            <div className="dropdown-menu">
+                                {provinces.map ((option) => (
+                                    <div
+                                        onClickCapture={handleProvinceChange}
+                                        onClick={() => onItemProvinceClick(option)}
+                                        key={option.provinceId}
+                                        className={'dropdown-item ${isSelected (option) && "selected"}'}>
+                                        {option.name}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        <div className="dropdown-tools">
+                            <div className="dropdown-tool">
+                                <Icon />
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <input
+                    required
                     type="text"
                     value={city}
                     placeholder="City"
                     onChange={(e) => setCity(e.target.value)}
                 />
-                {/*<input*/}
-                {/*    type="text"*/}
-                {/*    value={province}*/}
-                {/*    placeholder="Province"*/}
-                {/*    onChange={(e) => setProvince(e.target.value)}*/}
-                {/*/>*/}
                 <input
+                    minLength={3}
+                    maxLength={7}
+                    pattern={"^([0-9]+)+$"}
+                    required
                     type="text"
                     value={postalCode}
                     placeholder="Postal Code"
                     onChange={(e) => setPostalCode(e.target.value)}
                 />
-                {/*<input*/}
-                {/*    type="text"*/}
-                {/*    value={country}*/}
-                {/*    placeholder="Country"*/}
-                {/*    onChange={(e) => setCountry(e.target.value)}*/}
-                {/*/>*/}
 
                 <button type="submit">Create</button>
 
-                {/*<div className="message">{message ? <p>{message}</p> : null}</div>*/}
+                <div className="message">{message ? <p>{message}</p> : null}</div>
             </form>
         </div>
     );
 
-
-    //
-    // state = {
-    //   countries: [],
-    //   provinces: []
-    //
-    //
-    // };
-    //
-    // async componentDidMount() {
-    //   const [name, setName] = useState("");
-    //   const [email, setEmail] = useState("");
-    //   const [mobileNumber, setMobileNumber] = useState("");
-    //   const [message, setMessage] = useState("");
-    //
-    //   const CountryResponse = await fetch('/api/v1/countries');
-    //   const ProvinceResponse = await fetch('/api/v1/provinces');
-    //   const CountryBody = await CountryResponse.json();
-    //   const ProvinceBody = await ProvinceResponse.json();
-    //   console.log(CountryBody);
-    //   console.log(ProvinceBody);
-    //   this.setState({countries: CountryBody});
-    //   this.setState({provinces: ProvinceBody});
-    // }
-    //
-    // render() {
-    //   const {countries} = this.state;
-    //   const {provinces} = this.state;
-    //
-    //   return (
-    //       <div className="App">
-    //         <header className="App-header">
-    //           <img src={logo} className="App-logo" alt="logo" />
-    //           <div className="App-intro">
-    //             <h2>countries</h2>
-    //             {countries.map(country =>
-    //                 <div key={country.countryCode}>
-    //                   {country.countryCode} ({country.name})
-    //                 </div>
-    //             )}
-    //           </div>
-    //           <div className="App-intro">
-    //             <h2>Provinces</h2>
-    //             {provinces.map(province =>
-    //                 <div key={province.provinceId}>
-    //                   {province.provinceId.provinceCode} {province.provinceId.countryCode} ({province.name})
-    //                 </div>
-    //             )}
-    //           </div>
-    //         </header>
-    //       </div>
-    //   );
-    // }
 }
 export default App;
